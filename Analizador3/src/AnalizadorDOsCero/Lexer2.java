@@ -20,21 +20,23 @@ public class Lexer2 {
     int nlinea = 0;
     int i=0, i2=0;
     ListaSencilla vectorin;
+    ListaSencilla vectorclean;
     Buscador b;
     String []vec, veclean;
     boolean ban;
  
-    public  void LexerL(String filePath) {
+    /*public  void LexerL(String filePath) {
     	b=new Buscador();
     	b.leer(filePath);
     	vectorin=b.obtenerArchivo();
+    	vectorclean = new ListaSencilla();
         /*try (Stream<String> st = Files.lines(Paths.get(filePath))) {
             st.forEach(entrada::append);
         } catch (IOException ex) {
         	detener = true;
         	mensajeError = "Error en lectura de archivo: " + filePath;
             return;
-        }*/
+        }
         espaciosBlanco.add('\r');
         espaciosBlanco.add('\n');
         espaciosBlanco.add((char) 8);
@@ -47,8 +49,24 @@ public class Lexer2 {
         vec=vectorin.getValor(nlinea).split(" ");//al principio sera 0
         for (int i = 0; i < vec.length; i++) {
 			System.out.print("contenido vec"+i +""+vec[i]+",");
-		}
+			vectorclean.addValue(vec[i]);
+		}llenado();
         siguiente();
+    }
+    public void llenado() {
+    	for (int i = 0; i < vec.length; i++) {
+    		if (vec[i].isEmpty()) {//para el espacio en blanco
+    			int j= vectorclean.BuscarElemento(vec[i].toString());
+    			vectorclean.EliminarEspec(j);
+    			System.out.println("position:"+j);
+    			System.out.println("se obvio algo");
+    		}
+		}
+    	vec=null;
+    	vec= new String [vectorclean.listLenght()];
+    	for (int i = 0; i < vectorclean.listLenght(); i++) {
+			vec[i]=vectorclean.getValor(i);
+		}
     }
    
     public boolean chechar() {
@@ -79,6 +97,12 @@ public class Lexer2 {
     		i=0;//recorre desde el principio
     		i2=0;
         	vec=vectorin.getValor(0).split(" ");
+        	vectorclean.clear();
+        	for (int i = 0; i < vec.length; i++) {
+    			System.out.print("contenido vec"+i +""+vec[i]+",");
+    			vectorclean.addValue(vec[i]);
+    		}
+        	llenado();
         	System.out.println("tamaño de la lista"+vectorin.listLenght());//aqui ya esta el contenido
     	}else {
     		System.out.println("ya no hay joven");
@@ -94,7 +118,7 @@ public class Lexer2 {
         	detener = true;
             return;
         }
-        /*ignoraEspacios();*/
+        /*ignoraEspacios();
         if (chechar()) {
         	System.out.println("linea "+nlinea);
             return;
@@ -104,7 +128,7 @@ public class Lexer2 {
         	/*if(vec[i].equals("")|| vec[i].isEmpty()) {
         		detener=false;
         		siguiente();
-        	}else {*/
+        	}else {
         		mensajeError += "Error Léxico: '" + vec[i-1] + "' en la línea "+((nlinea+1)+b.lineasfalsas)+"\n";//nlinea mas 1 por que inicia en 0
             	detener = true;
             	return;

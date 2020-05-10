@@ -1,5 +1,6 @@
 package AnalizadorDOsCero;
 
+
 public class ListaSencilla {
   Nodo inicio, fin;
   int cantidad;
@@ -7,25 +8,11 @@ public class ListaSencilla {
     public ListaSencilla () {
         inicio = fin = null;
     }
+    //limpia xdxdxd
+    public void clear() {
+		  inicio=fin=null;    
+	}
 
-    /*void captura() {
-        String name;
-        do {           
-        name = JOptionPane.showInputDialog("Teclee un nombre");        
-        Nodo nuevo = new Nodo (name);
-        if ( name.equals("") == true) 
-            break;
-        //Comprobar que la lista este vacia
-        if (inicio == null) {
-            inicio = fin = nuevo;
-        } else {
-            //Ampliamos la lista, y posicionamos 'nuevo' en el final
-            fin.der = nuevo;
-            fin = fin.der;
-        }
-        } while (name.compareTo("")!= 0);
-        
-    }*/
     public boolean isEmpty() {
 		if(inicio == null && fin ==null) return true;
 		return false;
@@ -95,18 +82,94 @@ public class ListaSencilla {
         inicio = inicio.der;
         v.der = null;*/
     }
-
-
+	public boolean EliminarEspec(int pos) {
+		if(!isEmpty()) {
+			if(pos == 0) {
+				if(inicio==fin) {	//Solo un elemento
+					inicio=fin=null;
+					return true;
+				}else {	//Hay más de un elemento
+					inicio=inicio.der;
+					return true;
+				}
+			}else {
+				//Localizar la posición
+				Nodo ant=null;Nodo temp=inicio;int C=0;
+				while(temp!=null && C!=pos) {
+					ant=temp;
+					temp=temp.der;
+					C++;
+				}
+				
+				if(temp == null) {
+					System.out.println("No se encuentra la posicón " + pos + " para eliminarlo.");
+					return false;
+				}else{
+					//Sea el ultimo elemento de la lista
+					if(temp==fin) {
+						ant.der=null;fin=ant;
+						return true;
+					}else {
+						ant.der=temp.der;
+						return true;
+					}	
+				}
+					
+			}
+		}else
+			System.out.println("\nLista vacía");
+		return false;
+	}
+	public void setValueAt( int Pos, String p) {
+		Nodo obj=new Nodo(p);
+		if(isEmpty())
+			inicio=fin=obj;
+		else {
+			
+			if(Pos == 0) {
+				obj.der=inicio;
+				inicio=obj;
+			}else{
+				//Buscar posición
+				Nodo ant=null, rec=inicio;
+				int C=0;
+				while(rec!=null && C!=Pos) {
+					ant=rec;
+					rec=rec.der;
+					C++;
+				}
+				
+				if(rec!=null) {
+					//Si encuentra la posición
+					ant.der=obj;
+					obj.der=rec;
+				}else {
+					//No se encuentra
+					fin.der=obj;
+					fin=obj;
+				}
+			}
+		}
+	}
+	//retorna la pos del elemento
+	public int indexOf(String a) {
+		int pos=0;Nodo temp=inicio;
+		while(temp != null && !temp.nombre.equalsIgnoreCase(a)) {
+			temp=temp.der;
+			pos++;
+		}
+		if(temp==null) {
+			return -1; //No se encontró
+		}else {
+			return pos; //Si lo encontró
+		}
+	}
 
     void borrar_ultimo () {
         if (inicio == fin) {
             inicio = fin = null;
         } else {
         Nodo v = inicio;
-       //
-        /*for (int i = 0; i < elem-2; i++) {
-            v = v.der; 
-        } */ 
         while (v.der != fin) {
             v = v.der;
         }
@@ -132,23 +195,30 @@ public class ListaSencilla {
         }
         return valor;
     }
+    public boolean contiene(String v) {
+    	Nodo temp=inicio;
+		while(temp != null && !temp.nombre.equalsIgnoreCase(v)) {
+			temp=temp.der;
+		}
+		if(temp==null) {
+			return false; //No se encontró
+		}else {
+			return true; //Si lo encontró
+		}
+    }
     
     public class Nodo {
         String nombre;
         Nodo der;
         
         public Nodo (){
-            nombre = "Sin nombre";
+            nombre = "";
             der = null;
         }
         public Nodo (String nombre){
             this.nombre = nombre;
             der = null;
         }
-    }
-    
-    
- 
-    
+    }  
 }
 
